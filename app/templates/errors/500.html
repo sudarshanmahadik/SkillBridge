@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}500 Internal Server Error — SkillBridge{% endblock %}
+{% block content %}
+<div class="min-h-[70vh] flex flex-col items-center justify-center text-center px-6 py-20">
+    <div class="w-16 h-16 rounded-2xl bg-red-950/80 border border-red-500/40 flex items-center justify-center text-red-400 mb-6">
+        <span class="material-symbols-outlined text-3xl">build</span>
+    </div>
+    <div class="text-xs uppercase font-bold tracking-widest text-red-400 mb-2">Error 500 • Internal Exception</div>
+    <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-white mb-3">Server Encountered an Issue</h1>
+    <p class="text-sm text-on-surface-variant max-w-md mb-8">
+        An unexpected exception occurred while processing this request. The transaction has been rolled back safely.
+    </p>
+    <a href="{{ url_for('public.index') }}" class="px-6 py-3 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-white text-xs font-semibold transition-colors">
+        Return to Safety
+    </a>
+</div>
+{% endblock %}

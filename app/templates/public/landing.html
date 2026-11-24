@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}SkillBridge — Smart IT Skill Gap Analyzer & Career Roadmap{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative w-full max-w-[1360px] mx-auto px-6 pt-12 pb-24 lg:py-28 overflow-hidden">
+    <!-- Glow Background Gradients -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-primary-container/20 to-secondary/15 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto">
+        <!-- Top Pill Badge -->
+        <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-surface-container border border-surface-container-high shadow-inner text-xs font-semibold text-primary mb-8">
+            <span class="w-2 h-2 rounded-full bg-primary badge-pulse"></span>
+            <span>Intelligent IT Career Pathway & Skill Gap Diagnostic Engine</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.15] mb-6">
+            Bridge Your Skills. <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary-container to-secondary">
+                Build Your Future.
+            </span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-base sm:text-lg text-on-surface-variant max-w-2xl font-normal leading-relaxed mb-10">
+            Stop guessing what to learn next. SkillBridge analyzes your current technical capabilities against real-world IT job requirements, diagnoses missing competencies, and builds a customized roadmap for your target career.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+            <a href="{{ url_for('auth.login', tab='register') }}" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-white font-bold text-base hover:brightness-110 shadow-xl shadow-primary-container/25 transition-all flex items-center justify-center gap-2">
+                <span>Start Free Assessment</span>
+                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+            </a>
+            <a href="#career-paths" class="w-full sm:w-auto px-8 py-4 rounded-xl border border-outline-variant/40 hover:bg-surface-container-high/80 text-white font-semibold text-base transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-xl text-primary">explore</span>
+                <span>Explore IT Career Roles</span>
+            </a>
+        </div>
+
+        <!-- Metric Badges Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 w-full max-w-3xl">
+            <div class="p-4 rounded-xl bg-surface-container-lowest/80 border border-surface-container-high/80 backdrop-blur-sm text-center">
+                <div class="font-display font-extrabold text-2xl text-white">{{ stats.total_roles or '12+' }}</div>
+                <div class="text-xs text-on-surface-variant font-medium mt-1">IT Career Roles</div>
+            </div>
+            <div class="p-4 rounded-xl bg-surface-container-lowest/80 border border-surface-container-high/80 backdrop-blur-sm text-center">
+                <div class="font-display font-extrabold text-2xl text-white">{{ stats.total_skills or '30+' }}</div>
+                <div class="text-xs text-on-surface-variant font-medium mt-1">Technical Skills</div>
+            </div>
+            <div class="p-4 rounded-xl bg-surface-container-lowest/80 border border-surface-container-high/80 backdrop-blur-sm text-center">
+                <div class="font-display font-extrabold text-2xl text-primary">100%</div>
+                <div class="text-xs text-on-surface-variant font-medium mt-1">Mathematical Gap Model</div>
+            </div>
+            <div class="p-4 rounded-xl bg-surface-container-lowest/80 border border-surface-container-high/80 backdrop-blur-sm text-center">
+                <div class="font-display font-extrabold text-2xl text-secondary">Adaptive</div>
+                <div class="text-xs text-on-surface-variant font-medium mt-1">Personalized Roadmaps</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Problem Section -->
+<section class="w-full bg-surface-container-lowest/80 py-20 lg:py-24 border-y border-surface-container-high/40">
+    <div class="max-w-[1360px] mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="text-xs uppercase tracking-widest font-bold text-error mb-2">The Problem in Tech Education</div>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">Confused About Which Skills to Learn?</h2>
+            <p class="text-on-surface-variant text-sm sm:text-base mt-4">
+                Students and job seekers spend months learning random tutorials without knowing if they meet market expectations.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-8 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-error/40 transition-all">
+                <div class="w-12 h-12 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-error mb-6">
+                    <span class="material-symbols-outlined text-2xl">help</span>
+                </div>
+                <h3 class="font-display font-bold text-xl text-white mb-3">Unclear Role Requirements</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Job descriptions are bloated with conflicting requirements. Candidates struggle to separate foundational core skills from optional nice-to-haves.
+                </p>
+            </div>
+
+            <div class="p-8 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-error/40 transition-all">
+                <div class="w-12 h-12 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-error mb-6">
+                    <span class="material-symbols-outlined text-2xl">search_off</span>
+                </div>
+                <h3 class="font-display font-bold text-xl text-white mb-3">Unknown Skill Gaps</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Knowing you know "some Python" doesn't tell you if you meet the intermediate or advanced benchmark needed for backend frameworks or data pipelines.
+                </p>
+            </div>
+
+            <div class="p-8 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-error/40 transition-all">
+                <div class="w-12 h-12 rounded-xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-error mb-6">
+                    <span class="material-symbols-outlined text-2xl">wrong_location</span>
+                </div>
+                <h3 class="font-display font-bold text-xl text-white mb-3">No Structured Sequence</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Jumping between disconnected courses leads to tutorial hell with zero milestones, no progress tracking, and no realistic career readiness.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Solution & Core Modules Section -->
+<section id="modules" class="w-full max-w-[1360px] mx-auto px-6 py-24 lg:py-28">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="text-xs uppercase tracking-widest font-bold text-primary mb-2">Complete Architecture</div>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">Everything You Need to Plan Your IT Career</h2>
+        <p class="text-on-surface-variant text-sm sm:text-base mt-4">
+            A comprehensive, database-driven system engineered to guide you from self-assessment to interview readiness.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Module 1 -->
+        <div class="p-7 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary mb-5">
+                    <span class="material-symbols-outlined text-2xl">explore</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-2">Career Role Explorer</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Search and filter industry-standard IT roles, from Web Developer and Python Specialist to Data Scientist and Cloud Architect.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-surface-container-high/60 flex items-center text-xs font-semibold text-primary">
+                <span>Database-Driven Roles</span>
+                <span class="material-symbols-outlined text-sm ml-1">check</span>
+            </div>
+        </div>
+
+        <!-- Module 2 -->
+        <div class="p-7 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-secondary-container/20 border border-secondary/30 flex items-center justify-center text-secondary mb-5">
+                    <span class="material-symbols-outlined text-2xl">quiz</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-2">Self-Paced Skill Assessment</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Manually enter and calibrate your existing skills across Beginner, Intermediate, and Advanced proficiency tiers without preassumptions.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-surface-container-high/60 flex items-center text-xs font-semibold text-secondary">
+                <span>Flexible Competency Ratings</span>
+                <span class="material-symbols-outlined text-sm ml-1">check</span>
+            </div>
+        </div>
+
+        <!-- Module 3 -->
+        <div class="p-7 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-tertiary-container/20 border border-tertiary/30 flex items-center justify-center text-tertiary mb-5">
+                    <span class="material-symbols-outlined text-2xl">troubleshoot</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-2">Intelligent Skill Gap Engine</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Calculates mathematical readiness percentages, identifies missing skills, and highlights competencies needing targeted upgrade.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-surface-container-high/60 flex items-center text-xs font-semibold text-tertiary">
+                <span>Weighted Scoring Formula</span>
+                <span class="material-symbols-outlined text-sm ml-1">check</span>
+            </div>
+        </div>
+
+        <!-- Module 4 -->
+        <div class="p-7 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5">
+                    <span class="material-symbols-outlined text-2xl">conversion_path</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-2">Adaptive Learning Roadmap</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Sequences missing competencies into staged milestones with actionable objectives, realistic durations, and progress checkboxes.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-surface-container-high/60 flex items-center text-xs font-semibold text-emerald-400">
+                <span>Milestone Completion Tracking</span>
+                <span class="material-symbols-outlined text-sm ml-1">check</span>
+            </div>
+        </div>
+
+        <!-- Module 5 -->
+        <div class="p-7 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-blue-950/60 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-5">
+                    <span class="material-symbols-outlined text-2xl">auto_stories</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-2">Curated Learning Resources</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Recommends verified official documentation, tutorials, courses, and practice platforms mapped directly to your missing skills.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-surface-container-high/60 flex items-center text-xs font-semibold text-blue-400">
+                <span>Real Verified Links</span>
+                <span class="material-symbols-outlined text-sm ml-1">check</span>
+            </div>
+        </div>
+
+        <!-- Module 6 -->
+        <div class="p-7 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-purple-950/60 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-5">
+                    <span class="material-symbols-outlined text-2xl">admin_panel_settings</span>
+                </div>
+                <h3 class="font-display font-bold text-lg text-white mb-2">Role-Based Admin Control</h3>
+                <p class="text-on-surface-variant text-sm leading-relaxed">
+                    Comprehensive admin management panel for managing students, career roles, skills, requirement weight matrix, and resources.
+                </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-surface-container-high/60 flex items-center text-xs font-semibold text-purple-400">
+                <span>Strict Security & RBAC</span>
+                <span class="material-symbols-outlined text-sm ml-1">check</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="w-full bg-surface-container-lowest py-20 lg:py-24 border-t border-surface-container-high/40">
+    <div class="max-w-[1360px] mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <div class="text-xs uppercase tracking-widest font-bold text-secondary mb-2">Streamlined Workflow</div>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">How SkillBridge Works</h2>
+            <p class="text-on-surface-variant text-sm sm:text-base mt-4">
+                Four simple steps to clarify your tech career path and achieve market-ready competency.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            <!-- Step 1 -->
+            <div class="p-6 rounded-2xl bg-surface-container border border-surface-container-high flex flex-col items-center text-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 text-primary font-display font-bold text-lg flex items-center justify-center mb-4">
+                    1
+                </div>
+                <h4 class="font-display font-bold text-base text-white mb-2">Select Target Role</h4>
+                <p class="text-xs text-on-surface-variant">
+                    Pick your desired career path from our verified IT role directory.
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="p-6 rounded-2xl bg-surface-container border border-surface-container-high flex flex-col items-center text-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 text-primary font-display font-bold text-lg flex items-center justify-center mb-4">
+                    2
+                </div>
+                <h4 class="font-display font-bold text-base text-white mb-2">Assess Your Skills</h4>
+                <p class="text-xs text-on-surface-variant">
+                    Rate your current proficiency levels honestly from Beginner to Advanced.
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="p-6 rounded-2xl bg-surface-container border border-surface-container-high flex flex-col items-center text-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 text-primary font-display font-bold text-lg flex items-center justify-center mb-4">
+                    3
+                </div>
+                <h4 class="font-display font-bold text-base text-white mb-2">Analyze Skill Gap</h4>
+                <p class="text-xs text-on-surface-variant">
+                    View your match score, missing skills, and prioritized gap matrix.
+                </p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="p-6 rounded-2xl bg-surface-container border border-surface-container-high flex flex-col items-center text-center">
+                <div class="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 text-primary font-display font-bold text-lg flex items-center justify-center mb-4">
+                    4
+                </div>
+                <h4 class="font-display font-bold text-base text-white mb-2">Execute Roadmap</h4>
+                <p class="text-xs text-on-surface-variant">
+                    Follow milestone learning stages with recommended materials and track progress.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Roles Section -->
+<section id="career-paths" class="w-full max-w-[1360px] mx-auto px-6 py-24">
+    <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-4">
+        <div>
+            <div class="text-xs uppercase tracking-widest font-bold text-primary mb-2">Target Roles</div>
+            <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">Featured IT Career Roles</h2>
+            <p class="text-on-surface-variant text-sm mt-2">Explore top industry roles and benchmark your skills.</p>
+        </div>
+        <a href="{{ url_for('auth.login', tab='register') }}" class="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
+            <span>View All in Student Portal</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for role in featured_roles %}
+        <div class="p-6 rounded-2xl bg-surface-container border border-surface-container-high/80 hover:border-primary/50 transition-all flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-surface-container-high text-primary border border-outline-variant/30">
+                        {{ role.category }}
+                    </span>
+                    <span class="text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        {{ role.market_demand }} Demand
+                    </span>
+                </div>
+                <h3 class="font-display font-bold text-xl text-white mb-2">{{ role.title }}</h3>
+                <p class="text-xs text-on-surface-variant line-clamp-3 mb-4 leading-relaxed">
+                    {{ role.description }}
+                </p>
+            </div>
+            <div class="pt-4 border-t border-surface-container-high/60 flex items-center justify-between text-xs">
+                <span class="text-on-surface-variant">Avg: <strong class="text-white">{{ role.salary_range }}</strong></span>
+                <a href="{{ url_for('auth.login') }}" class="font-semibold text-primary hover:underline flex items-center gap-1">
+                    <span>Analyze Role</span>
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Final CTA Banner -->
+<section class="w-full max-w-[1360px] mx-auto px-6 pb-24">
+    <div class="relative rounded-3xl bg-gradient-to-r from-primary-container/20 via-surface-container to-secondary/20 border border-primary/30 p-12 lg:p-16 text-center overflow-hidden">
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white mb-4">
+                Ready to Bridge Your Skill Gap?
+            </h2>
+            <p class="text-on-surface-variant text-sm sm:text-base mb-8">
+                Join SkillBridge today. Evaluate your technical skills, uncover what's missing for your dream career, and take control of your learning pathway.
+            </p>
+            <a href="{{ url_for('auth.login', tab='register') }}" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary text-white font-bold text-base hover:brightness-110 shadow-xl shadow-primary-container/30 transition-all">
+                <span>Create Student Account</span>
+                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

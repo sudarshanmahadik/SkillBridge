@@ -1,0 +1,157 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_page_title %}Manage Role Requirements{% endblock %}
+
+{% block admin_content %}
+<div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Header & Role Selector -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <h1 class="font-display font-extrabold text-3xl text-white tracking-tight">Role Skill Requirements</h1>
+            <p class="text-sm text-on-surface-variant mt-1">Assign technical prerequisites, target proficiency levels, and importance weights to career roles.</p>
+        </div>
+
+        <!-- Career Role Switcher Dropdown -->
+        <form method="GET" action="{{ url_for('admin.manage_role_requirements') }}" class="flex items-center gap-2">
+            <select name="role_id" onchange="this.form.submit()"
+                    class="px-4 py-2.5 rounded-xl bg-surface-container border border-surface-container-high text-white text-xs font-semibold focus:outline-none focus:border-primary">
+                {% for r in all_roles %}
+                <option value="{{ r.id }}" {% if selected_role and selected_role.id == r.id %}selected{% endif %}>
+                    {{ r.title }} ({{ r.code }})
+                </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    {% if selected_role %}
+    <!-- Role Requirements Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Form to Map Skill to this Role (4 Cols) -->
+        <div class="lg:col-span-4 p-7 rounded-3xl bg-surface-container border border-surface-container-high/80 space-y-5">
+            <div>
+                <span class="text-[10px] font-bold text-primary uppercase tracking-wider block">Requirement Builder</span>
+                <h2 class="font-display font-bold text-lg text-white mt-1">Map Skill to {{ selected_role.title }}</h2>
+                <p class="text-xs text-on-surface-variant mt-1">Add or update required competency benchmarks.</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('admin.manage_role_requirements') }}" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="career_role_id" value="{{ selected_role.id }}">
+
+                <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5">Select Skill</label>
+                    <select name="skill_id" required
+                            class="w-full px-4 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high text-white text-xs focus:outline-none focus:border-primary">
+                        {% for s in all_skills %}
+                        <option value="{{ s.id }}">{{ s.name }} ({{ s.category }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5">Required Level</label>
+                        <select name="required_level" class="w-full px-4 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high text-white text-xs focus:outline-none focus:border-primary">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate" selected>Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5">Importance Tier</label>
+                        <select name="importance" class="w-full px-4 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high text-white text-xs focus:outline-none focus:border-primary">
+                            <option value="Core" selected>Core</option>
+                            <option value="Recommended">Recommended</option>
+                            <option value="Optional">Optional</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1.5">Importance Weight (1 - 5)</label>
+                    <select name="weight" class="w-full px-4 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high text-white text-xs focus:outline-none focus:border-primary">
+                        <option value="5">5 (Critical / Highest Impact)</option>
+                        <option value="4">4 (High Importance)</option>
+                        <option value="3" selected>3 (Standard Requirement)</option>
+                        <option value="2">2 (Secondary Competency)</option>
+                        <option value="1">1 (Supporting Tool)</option>
+                    </select>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 rounded-xl bg-primary text-on-primary font-bold text-xs hover:brightness-110 shadow transition-all">
+                        Map Skill Requirement
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Active Role Skill Matrix (8 Cols) -->
+        <div class="lg:col-span-8 p-7 rounded-3xl bg-surface-container border border-surface-container-high/80 space-y-5">
+            <div class="flex items-center justify-between pb-3 border-b border-surface-container-high/60">
+                <div>
+                    <h2 class="font-display font-bold text-lg text-white">Active Requirement Matrix</h2>
+                    <p class="text-xs text-on-surface-variant mt-0.5">Benchmark specifications for {{ selected_role.title }}</p>
+                </div>
+                <span class="text-xs font-semibold text-primary">{{ requirements|length }} Mapped Skills</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-surface-container-high/80 text-on-surface-variant font-bold uppercase tracking-wider">
+                            <th class="py-3 px-3">Skill</th>
+                            <th class="py-3 px-3">Category</th>
+                            <th class="py-3 px-3">Required Level</th>
+                            <th class="py-3 px-3">Importance</th>
+                            <th class="py-3 px-3 text-center">Weight</th>
+                            <th class="py-3 px-3 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container-high/40">
+                        {% for req in requirements %}
+                        <tr class="hover:bg-surface-container-high/30 transition-colors">
+                            <td class="py-3 px-3 font-bold text-white flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-base">{{ req.skill.icon_name or 'code' }}</span>
+                                <span>{{ req.skill.name }}</span>
+                            </td>
+                            <td class="py-3 px-3 text-on-surface-variant">
+                                {{ req.skill.category }}
+                            </td>
+                            <td class="py-3 px-3">
+                                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-primary-container/20 text-primary border border-primary/30">
+                                    {{ req.required_level }}
+                                </span>
+                            </td>
+                            <td class="py-3 px-3 font-semibold text-white">
+                                {{ req.importance }}
+                            </td>
+                            <td class="py-3 px-3 text-center font-mono font-bold text-emerald-400">
+                                {{ req.weight }}x
+                            </td>
+                            <td class="py-3 px-3 text-right">
+                                <form method="POST" action="{{ url_for('admin.manage_role_requirements') }}" onsubmit="return confirm('Remove this skill from role requirements?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="requirement_id" value="{{ req.id }}">
+                                    <button type="submit" title="Remove Requirement" class="p-1.5 rounded-lg bg-surface-container-high hover:bg-red-950 text-red-400 transition-colors">
+                                        <span class="material-symbols-outlined text-sm">close</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

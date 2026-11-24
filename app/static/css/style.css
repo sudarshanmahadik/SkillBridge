@@ -1,0 +1,76 @@
+/* SkillBridge Global Styles */
+@layer base {
+    html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #0e1323;
+        color: #dee1f9;
+        font-family: 'Inter', sans-serif;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #080d1d;
+}
+::-webkit-scrollbar-thumb {
+    background: #25293a;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #434654;
+}
+
+/* Glassmorphism and Card Accents */
+.card-glass {
+    background: rgba(26, 31, 48, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-glow {
+    box-shadow: 0 0 25px rgba(100, 138, 255, 0.12);
+}
+
+.badge-pulse {
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Material Symbols alignment */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+.material-symbols-fill {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Flash alerts animation */
+.alert-fade {
+    animation: fadeInDown 0.3s ease-out forwards;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

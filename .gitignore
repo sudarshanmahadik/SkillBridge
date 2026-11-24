@@ -1,0 +1,12 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+test_skillbridge.db
+.env
+.pytest_cache/
+.vscode/
+stitch_source/

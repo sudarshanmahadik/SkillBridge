@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}403 Forbidden — SkillBridge{% endblock %}
+{% block content %}
+<div class="min-h-[70vh] flex flex-col items-center justify-center text-center px-6 py-20">
+    <div class="w-16 h-16 rounded-2xl bg-red-950/80 border border-red-500/40 flex items-center justify-center text-red-400 mb-6 shadow-xl shadow-red-500/10">
+        <span class="material-symbols-outlined text-3xl">gpp_maybe</span>
+    </div>
+    <div class="text-xs uppercase font-bold tracking-widest text-red-400 mb-2">Access Denied • Error 403</div>
+    <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-white mb-3">Restricted Authorization Area</h1>
+    <p class="text-sm text-on-surface-variant max-w-md mb-8">
+        You do not possess the required permissions to view this endpoint. If you are an administrator, please sign in through the Admin Console.
+    </p>
+    <div class="flex items-center gap-4">
+        <a href="{{ url_for('public.index') }}" class="px-5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-white text-xs font-semibold transition-colors">
+            Return Home
+        </a>
+        <a href="{{ url_for('auth.admin_login') }}" class="px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:brightness-110 shadow transition-all">
+            Admin Login
+        </a>
+    </div>
+</div>
+{% endblock %}

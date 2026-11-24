@@ -1,0 +1,149 @@
+{% extends "student/base_student.html" %}
+
+{% block student_page_title %}Learning Resources{% endblock %}
+
+{% block student_content %}
+<div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Header & Search Controls -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <h1 class="font-display font-extrabold text-3xl text-white tracking-tight">Curated Learning Resources</h1>
+            <p class="text-sm text-on-surface-variant mt-1">Verified documentation, interactive tutorials, courses, and practice sandboxes mapped directly to curriculum skills.</p>
+        </div>
+
+        <!-- Search Bar -->
+        <form method="GET" action="{{ url_for('student.resources') }}" class="flex items-center gap-2 max-w-md w-full">
+            <input type="hidden" name="type" value="{{ active_type }}">
+            <input type="hidden" name="skill" value="{{ active_skill }}">
+            <div class="relative w-full">
+                <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Search resources or providers..."
+                       class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container border border-surface-container-high text-white text-xs focus:outline-none focus:border-primary transition-colors">
+            </div>
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-white text-xs font-semibold shrink-0">
+                Filter
+            </button>
+        </form>
+    </div>
+
+    <!-- Filter Pills Row -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <!-- Resource Types -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+            <a href="{{ url_for('student.resources', type='all', skill=active_skill, search=search_query) }}"
+               class="px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border
+               {% if active_type == 'all' %}bg-primary text-on-primary border-primary{% else %}bg-surface-container border-surface-container-high text-on-surface-variant hover:text-white{% endif %}">
+                All Types
+            </a>
+            {% for rt in resource_types %}
+            <a href="{{ url_for('student.resources', type=rt, skill=active_skill, search=search_query) }}"
+               class="px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border
+               {% if active_type == rt %}bg-primary text-on-primary border-primary{% else %}bg-surface-container border-surface-container-high text-on-surface-variant hover:text-white{% endif %}">
+                {{ rt }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Skill Filter Dropdown -->
+        <form method="GET" action="{{ url_for('student.resources') }}" class="shrink-0">
+            <input type="hidden" name="type" value="{{ active_type }}">
+            <input type="hidden" name="search" value="{{ search_query }}">
+            <select name="skill" onchange="this.form.submit()"
+                    class="px-3.5 py-1.5 rounded-xl bg-surface-container border border-surface-container-high text-white text-xs focus:outline-none focus:border-primary">
+                <option value="all">Filter by Skill (All)</option>
+                {% for s in all_skills %}
+                <option value="{{ s.id }}" {% if active_skill|string == s.id|string %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <!-- Priority Recommendations For Student's Gap -->
+    {% if recommended and active_type == 'all' and not search_query and active_skill == 'all' %}
+    <div class="p-7 rounded-3xl bg-surface-container border border-primary/30 space-y-5">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-xl">recommend</span>
+                <h2 class="font-display font-bold text-lg text-white">Recommended for Your Active Skill Gaps</h2>
+            </div>
+            <span class="text-xs text-primary font-semibold">Priority Learning</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {% for res in recommended[:6] %}
+            <div class="p-5 rounded-2xl bg-surface-container-lowest border border-surface-container-high/60 flex flex-col justify-between hover:border-primary/50 transition-all">
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-primary/20 text-primary border border-primary/30">
+                            {{ res.skill.name }}
+                        </span>
+                        <span class="text-[10px] text-on-surface-variant">{{ res.resource_type }}</span>
+                    </div>
+                    <h3 class="font-display font-bold text-sm text-white mb-1.5">{{ res.title }}</h3>
+                    <div class="text-[11px] text-on-surface-variant mb-4">Provider: <strong class="text-white">{{ res.provider }}</strong></div>
+                </div>
+
+                <div class="pt-3 border-t border-surface-container-high/40 flex items-center justify-between">
+                    <span class="text-[10px] text-on-surface-variant font-medium flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">schedule</span>
+                        {{ res.estimated_time }}
+                    </span>
+                    <a href="{{ res.url }}" target="_blank" rel="noopener noreferrer"
+                       class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+                        <span>Open Resource</span>
+                        <span class="material-symbols-outlined text-xs">open_in_new</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- All Resources Catalog Grid -->
+    <div class="space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="font-display font-bold text-xl text-white">All Resources Catalog</h2>
+            <span class="text-xs text-on-surface-variant">{{ resources|length }} Total Resources</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for res in resources %}
+            <div class="p-6 rounded-3xl bg-surface-container border border-surface-container-high/80 hover:border-primary/40 transition-all flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-lowest text-primary border border-surface-container-high">
+                            {{ res.skill.name }}
+                        </span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant">
+                            {{ res.difficulty }}
+                        </span>
+                    </div>
+
+                    <h3 class="font-display font-bold text-base text-white mb-2 leading-snug">{{ res.title }}</h3>
+                    <div class="text-xs text-on-surface-variant mb-4 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-sm text-primary">verified</span>
+                        <span>{{ res.provider }}</span>
+                        <span>•</span>
+                        <span>{{ res.resource_type }}</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-surface-container-high/60 flex items-center justify-between">
+                    <span class="text-[11px] text-on-surface-variant flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">schedule</span>
+                        {{ res.estimated_time }}
+                    </span>
+                    <a href="{{ res.url }}" target="_blank" rel="noopener noreferrer"
+                       class="px-3.5 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-white text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                        <span>Launch</span>
+                        <span class="material-symbols-outlined text-xs">open_in_new</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

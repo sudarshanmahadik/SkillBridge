@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body_layout %}
+<div class="flex h-screen overflow-hidden bg-surface">
+    <!-- Student Sidebar Navigation (Stitch Layout) -->
+    <aside class="w-64 bg-surface-container-lowest border-r border-surface-container-high/60 flex flex-col shrink-0">
+        <!-- Brand Header -->
+        <div class="p-6 border-b border-surface-container-high/40">
+            <a href="{{ url_for('student.dashboard') }}" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-container to-secondary flex items-center justify-center text-white font-bold shadow-lg shadow-primary-container/20 group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-2xl">route</span>
+                </div>
+                <div>
+                    <span class="font-display font-extrabold text-xl tracking-tight text-white block">Skill<span class="text-primary">Bridge</span></span>
+                    <span class="text-[10px] tracking-wider uppercase font-semibold text-primary block -mt-1">Student Portal</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+            <a href="{{ url_for('student.dashboard') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.dashboard' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('student.profile') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.profile' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">account_circle</span>
+                <span>My Profile</span>
+            </a>
+
+            <a href="{{ url_for('student.career_roles') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.career_roles' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">explore</span>
+                <span>Career Explorer</span>
+            </a>
+
+            <a href="{{ url_for('student.skill_assessment') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.skill_assessment' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">quiz</span>
+                <span>Skill Assessment</span>
+            </a>
+
+            <a href="{{ url_for('student.skill_gap_analysis') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.skill_gap_analysis' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">troubleshoot</span>
+                <span>Skill Gap Analysis</span>
+            </a>
+
+            <a href="{{ url_for('student.learning_roadmap') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.learning_roadmap' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">conversion_path</span>
+                <span>Learning Roadmap</span>
+            </a>
+
+            <a href="{{ url_for('student.resources') }}" 
+               class="flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all {% if request.endpoint == 'student.resources' %}bg-primary text-on-primary shadow-lg shadow-primary/20{% else %}text-on-surface-variant hover:text-white hover:bg-surface-container-high/60{% endif %}">
+                <span class="material-symbols-outlined text-xl">auto_stories</span>
+                <span>Resources</span>
+            </a>
+        </nav>
+
+        <!-- Current Target Role Pill -->
+        <div class="px-4 py-3 mx-4 mb-3 rounded-xl bg-surface-container border border-surface-container-high/80">
+            <div class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Target Career</div>
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-white truncate">
+                    {{ current_user.profile.target_career_role.title if current_user.profile and current_user.profile.target_career_role else 'None Selected' }}
+                </span>
+                <a href="{{ url_for('student.career_roles') }}" class="text-primary hover:underline text-[11px] font-medium shrink-0 ml-1">Change</a>
+            </div>
+        </div>
+
+        <!-- Student User Card Footer -->
+        <div class="p-4 border-t border-surface-container-high/60 bg-surface-container-low flex items-center justify-between">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-on-primary font-bold text-sm shrink-0">
+                    {{ current_user.full_name[:2].upper() }}
+                </div>
+                <div class="truncate">
+                    <div class="text-sm font-bold text-white truncate">{{ current_user.full_name }}</div>
+                    <div class="text-[11px] text-on-surface-variant truncate">{{ current_user.email }}</div>
+                </div>
+            </div>
+            <a href="{{ url_for('auth.logout') }}" title="Logout" class="p-2 text-on-surface-variant hover:text-red-400 hover:bg-surface-container-high rounded-lg transition-colors shrink-0">
+                <span class="material-symbols-outlined text-lg">logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Viewport -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top App Header -->
+        <header class="h-16 border-b border-surface-container-high/60 bg-surface-container-lowest/80 backdrop-blur-md px-8 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3">
+                <span class="text-xs uppercase tracking-widest font-bold text-primary">Student Console</span>
+                <span class="text-outline-variant">/</span>
+                <span class="text-sm font-semibold text-white">{% block student_page_title %}Dashboard{% endblock %}</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="{{ url_for('student.career_roles') }}" class="text-xs font-medium px-3.5 py-1.5 rounded-lg border border-outline-variant/40 hover:bg-surface-container-high text-on-surface flex items-center gap-1.5 transition-colors">
+                    <span class="material-symbols-outlined text-sm">explore</span>
+                    <span>Explore Careers</span>
+                </a>
+                <div class="h-4 w-px bg-surface-container-high"></div>
+                <span class="text-xs font-medium text-on-surface-variant">MCA Capstone</span>
+            </div>
+        </header>
+
+        <!-- Scrollable Main Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            {% block student_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}

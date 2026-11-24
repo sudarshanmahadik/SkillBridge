@@ -1,0 +1,180 @@
+{% extends "student/base_student.html" %}
+
+{% block student_page_title %}Learning Roadmap{% endblock %}
+
+{% block student_content %}
+<div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Top Roadmap Header & Dynamic Progress Banner -->
+    <div class="p-8 rounded-3xl bg-surface-container border border-surface-container-high/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+        <div class="space-y-2 relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest border border-surface-container-high text-[11px] font-semibold text-primary">
+                <span class="material-symbols-outlined text-sm">conversion_path</span>
+                <span>Personalized Adaptive Learning Pathway</span>
+            </div>
+            <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
+                {{ roadmap.title }}
+            </h1>
+            <p class="text-xs sm:text-sm text-on-surface-variant max-w-xl">
+                Generated from your live skill-gap analysis for <strong class="text-white">{{ target_role.title }}</strong>. Mark milestones as completed as you progress.
+            </p>
+        </div>
+
+        <!-- Progress Meter -->
+        <div class="p-5 rounded-2xl bg-surface-container-lowest border border-surface-container-high/80 min-w-[240px] relative z-10">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Overall Progress</span>
+                <span class="font-display font-bold text-xl text-emerald-400" id="progress-text">{{ roadmap.progress_percentage }}%</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-surface-container-high overflow-hidden">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500" style="width: {{ roadmap.progress_percentage }}%;"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-on-surface-variant mt-2">
+                <span id="items-completed-text">{{ roadmap.completed_items }} of {{ roadmap.total_items }} Completed</span>
+                <span>{{ roadmap.total_items - roadmap.completed_items }} Remaining</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid: Milestones (8 Cols) & Study Companion (4 Cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left: Stage Milestones (8 Cols) -->
+        <div class="lg:col-span-8 space-y-8">
+            {% for stage_name, items in stages.items() %}
+            <div class="p-7 rounded-3xl bg-surface-container border border-surface-container-high/80 space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-surface-container-high/60">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3 h-3 rounded-full bg-primary"></span>
+                        <h2 class="font-display font-bold text-lg text-white">{{ stage_name }}</h2>
+                    </div>
+                    <span class="text-xs font-semibold text-on-surface-variant">{{ items|length }} Milestones</span>
+                </div>
+
+                <div class="space-y-4">
+                    {% for item in items %}
+                    <div class="p-5 rounded-2xl bg-surface-container-lowest border {% if item.is_completed %}border-emerald-500/40 bg-emerald-950/10{% else %}border-surface-container-high/60{% endif %} flex flex-col justify-between gap-4 transition-all">
+                        
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-start gap-3.5">
+                                <!-- Interactive Checkbox Form -->
+                                <form method="POST" action="{{ url_for('student.toggle_item', item_id=item.id) }}" class="mt-0.5">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" 
+                                            class="w-7 h-7 rounded-lg border flex items-center justify-center transition-all cursor-pointer
+                                            {% if item.is_completed %}bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20{% else %}border-outline-variant hover:border-primary text-transparent hover:text-outline-variant/40{% endif %}">
+                                        <span class="material-symbols-outlined text-base">check</span>
+                                    </button>
+                                </form>
+
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[10px] font-mono font-bold text-primary px-2 py-0.5 rounded bg-surface-container border border-surface-container-high">
+                                            Milestone {{ item.sequence_order }}
+                                        </span>
+                                        <h3 class="font-display font-bold text-base text-white">{{ item.skill.name }}</h3>
+                                    </div>
+                                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                                        {{ item.learning_objective }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-end shrink-0">
+                                <span class="text-[11px] font-semibold text-on-surface-variant flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">schedule</span>
+                                    {{ item.estimated_duration }}
+                                </span>
+                                {% if item.is_completed %}
+                                    <span class="text-[10px] font-bold text-emerald-400 mt-1">Completed</span>
+                                {% else %}
+                                    <span class="text-[10px] font-bold text-amber-400 mt-1">In Progress</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Recommended Learning Materials for this Milestone -->
+                        {% set res_list = skill_resources.get(item.skill_id, []) %}
+                        {% if res_list %}
+                        <div class="pt-3 border-t border-surface-container-high/40 flex flex-wrap items-center gap-2">
+                            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mr-1">Study Materials:</span>
+                            {% for r in res_list %}
+                            <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-container text-[11px] font-medium text-primary hover:text-white hover:bg-surface-container-high transition-colors">
+                                <span class="material-symbols-outlined text-xs">
+                                    {% if r.resource_type == 'Documentation' %}menu_book
+                                    {% elif r.resource_type == 'Video' %}smart_display
+                                    {% elif r.resource_type == 'Online Course' %}school
+                                    {% else %}terminal{% endif %}
+                                </span>
+                                <span>{{ r.title[:24] }}{% if r.title|length > 24 %}...{% endif %}</span>
+                                <span class="material-symbols-outlined text-[10px]">open_in_new</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Right: Study Companion (Stitch Roadmap 2) (4 Cols) -->
+        <div class="lg:col-span-4 space-y-8">
+            <div class="p-7 rounded-3xl bg-surface-container border border-surface-container-high/80 space-y-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-bold text-secondary uppercase tracking-wider mb-2">
+                        <span class="material-symbols-outlined text-base">psychology</span>
+                        <span>Study Companion</span>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white">Recommended Pace</h3>
+                    <p class="text-xs text-on-surface-variant mt-1">Guidance based on your semester curriculum schedule.</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-surface-container-lowest border border-surface-container-high/60 space-y-3 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-on-surface-variant">Recommended Effort:</span>
+                        <strong class="text-white">10 - 15 Hours / Week</strong>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-on-surface-variant">Estimated Completion:</span>
+                        <strong class="text-emerald-300">8 - 10 Weeks</strong>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-on-surface-variant">Target Career:</span>
+                        <strong class="text-primary">{{ target_role.title }}</strong>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="text-xs font-bold text-white uppercase tracking-wider">Mastery Strategies</div>
+                    <ul class="text-xs text-on-surface-variant space-y-2.5">
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-primary text-sm shrink-0 mt-0.5">check_circle</span>
+                            <span>Build practical portfolio projects for each milestone instead of passively watching tutorials.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-primary text-sm shrink-0 mt-0.5">check_circle</span>
+                            <span>Commit and push your milestone code to GitHub to maintain regular developer proof-of-work.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-primary text-sm shrink-0 mt-0.5">check_circle</span>
+                            <span>Re-calibrate your assessed skill levels every 2 weeks to see your readiness score increase!</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="pt-4 border-t border-surface-container-high/60">
+                    <a href="{{ url_for('student.resources') }}" class="w-full py-3 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+                        <span class="material-symbols-outlined text-base text-primary">auto_stories</span>
+                        <span>Browse All Curated Resources</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
